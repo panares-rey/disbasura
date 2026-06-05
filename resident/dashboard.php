@@ -284,12 +284,16 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
       <a href="/disbasura/resident/dashboard.php" class="active">
         <span class="nav-icon">🏠</span> <?= $lang['dashboard'] ?>
       </a>
-      <a href="/disbasura/resident/submit-request.php">
+      <a href="/disbasura/resident/submit-request.php" style="position:relative">
         <span class="nav-icon">🚛</span> <?= $lang['submit_request'] ?>
+        <?php
+          $pending_req_count = count(array_filter($my_requests, fn($r) => in_array($r['status'],['pending','assigned','approved'])));
+          if($pending_req_count > 0):
+        ?><span class="notif-badge"><?= $pending_req_count > 99 ? '99+' : $pending_req_count ?></span><?php endif; ?>
       </a>
       <a href="/disbasura/resident/notifications.php" style="position:relative">
         <span class="nav-icon">🔔</span> <?= $lang['notifications'] ?>
-        <?php if($unread>0): ?><span class="notif-badge"><?= $unread ?></span><?php endif; ?>
+        <?php if($unread>0): ?><span class="notif-badge"><?= $unread > 99 ? '99+' : $unread ?></span><?php endif; ?>
       </a>
     </nav>
 

@@ -31,6 +31,24 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
             '<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>'],
     ];
 
+    // ── Per-page notification counts ─────────────────────────────
+    $db  = get_db();
+    $pageCounts = [];
+    try {
+        // Requests: pending count
+        $pageCounts['requests'] = (int)$db->query("SELECT COUNT(*) FROM requests WHERE status='pending'")->fetchColumn();
+        // Disputes: pending count
+        $pageCounts['disputes'] = (int)$db->query("SELECT COUNT(*) FROM disputes WHERE status='pending'")->fetchColumn();
+        // Notifications: unread
+        $pageCounts['notifications'] = $unread;
+        // Collectors: sick or unavailable
+        $pageCounts['collectors'] = (int)$db->query("SELECT COUNT(*) FROM collectors WHERE status IN ('sick','unavailable')")->fetchColumn();
+        // Schedules: unverified (missed/needs review)
+        $pageCounts['schedules'] = (int)$db->query("SELECT COUNT(*) FROM schedules WHERE status='unverified'")->fetchColumn();
+        // Residents: registered today
+        $pageCounts['residents'] = (int)$db->query("SELECT COUNT(*) FROM users WHERE role='resident' AND DATE(created_at)=CURDATE()")->fetchColumn();
+    } catch (Exception $e) {}
+
     $full_name = e($_SESSION['admin_name'] ?? 'Admin');
     $initial   = strtoupper(substr($full_name, 0, 1));
     $ud        = $unread > 0 ? 'flex' : 'none';
@@ -98,7 +116,8 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
 
     foreach ($nav as $key => [$label, $url, $icon]) {
         $cls   = $key === $active ? ' active' : '';
-        $badge = ($key === 'notifications' && $unread > 0) ? "<span class='nav-badge'>$unread</span>" : '';
+        $cnt   = $pageCounts[$key] ?? 0;
+        $badge = $cnt > 0 ? "<span class='nav-badge'>".($cnt > 99 ? '99+' : $cnt)."</span>" : '';
         echo "<a class='nav-item$cls' href='$url'><svg fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24' width='18' height='18'>$icon</svg><span class='nav-label'>$label</span>$badge</a>\n";
     }
 

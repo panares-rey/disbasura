@@ -390,7 +390,20 @@ html, body {
   .row-left       { flex-direction:row;flex-wrap:wrap;min-width:unset; }
 }
 
-/* ── Dark mode toggle button ── */
+/* ── Nav badge (red pill) ── */
+.nav-badge {
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 20px;
+  padding: .1rem .42rem;
+  font-size: .63rem;
+  font-weight: 800;
+  margin-left: auto;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
 .dark-toggle-btn {
   display: inline-flex;
   align-items: center;
