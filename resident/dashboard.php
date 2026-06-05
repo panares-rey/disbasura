@@ -146,6 +146,9 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
     .sidebar-brand h2{font-size:1rem;font-weight:800;color:#1a3a2a;line-height:1.1}
     .sidebar-brand p{font-size:.7rem;color:#7aab8a;margin-top:.1rem}
     .sidebar-user{padding:.85rem 1.25rem;border-bottom:1px solid #e4ede8}
+    .sidebar-user a{display:flex;align-items:center;gap:.65rem;text-decoration:none;border-radius:10px;padding:.35rem .5rem;margin:-.35rem -.5rem;transition:background .16s}
+    .sidebar-user a:hover{background:rgba(30,107,60,.07);text-decoration:none}
+    html.dark .sidebar-user a:hover{background:rgba(45,134,83,.15)}
     .sidebar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e5c38,#2d8653);display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:800;color:#fff;flex-shrink:0}
     .sidebar-user-info{margin-left:.65rem;overflow:hidden}
     .sidebar-user-info strong{font-size:.82rem;font-weight:700;color:#1a3a2a;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -156,16 +159,16 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
     .sidebar-nav a.active{background:#e8f5ee;color:#1a3a2a}
     .sidebar-nav a .nav-icon{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
     .notif-badge{position:absolute;right:.75rem;background:#e74c3c;color:#fff;border-radius:20px;font-size:.62rem;padding:.1rem .4rem;font-weight:800;line-height:1.4}
-    .sidebar-bottom{padding:.75rem;border-top:1px solid #e4ede8}
-    .sidebar-bottom-controls{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
-    .dark-toggle-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.5rem;border:1.5px solid #d4e6db;border-radius:8px;background:transparent;cursor:pointer;font-size:.78rem;font-weight:600;color:#4a7a5a;font-family:inherit;transition:all .16s}
-    html.dark .dark-toggle-btn{border-color:var(--border);color:#8baa96}
-    .dark-toggle-btn:hover{background:#f0faf4;border-color:#2d8653;color:#1a3a2a}
-    html.dark .dark-toggle-btn:hover{background:rgba(45,134,83,.15)}
-    .lang-select{flex:1;border:1.5px solid #d4e6db;border-radius:8px;padding:.45rem .5rem;font-size:.78rem;background:transparent;color:#4a7a5a;font-family:inherit;cursor:pointer}
-    html.dark .lang-select{border-color:var(--border);background:transparent;color:#8baa96}
-    .signout-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.55rem;border:1.5px solid #fdd;border-radius:8px;background:transparent;cursor:pointer;font-size:.8rem;font-weight:600;color:#c0392b;font-family:inherit;text-decoration:none;transition:all .16s}
-    .signout-btn:hover{background:#fdecea;text-decoration:none}
+    .sidebar-bottom{padding:.65rem .85rem;border-top:1px solid #e4ede8}
+    .sb-bottom-row{display:flex;align-items:center;gap:.4rem;margin-bottom:.45rem}
+    .sb-icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.4rem .7rem;border:1.5px solid #d4e6db;border-radius:8px;background:transparent;cursor:pointer;font-size:.75rem;font-weight:600;color:#4a7a5a;font-family:inherit;transition:all .16s;white-space:nowrap;flex:1}
+    .sb-icon-btn:hover{background:#f0faf4;border-color:#2d8653;color:#1a3a2a}
+    html.dark .sb-icon-btn{border-color:rgba(255,255,255,.15);color:#8baa96}
+    html.dark .sb-icon-btn:hover{background:rgba(45,134,83,.15);border-color:rgba(76,175,128,.4);color:#e2f0e8}
+    .sb-lang-select{flex:0 0 auto;border:1.5px solid #d4e6db;border-radius:8px;padding:.4rem .45rem;font-size:.75rem;background:transparent;color:#4a7a5a;font-family:inherit;cursor:pointer;max-width:72px}
+    html.dark .sb-lang-select{border-color:rgba(255,255,255,.15);background:transparent;color:#8baa96}
+    .signout-btn{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;padding:.48rem;border:1.5px solid rgba(224,82,82,.3);border-radius:8px;background:transparent;cursor:pointer;font-size:.78rem;font-weight:600;color:#c0392b;font-family:inherit;text-decoration:none;transition:all .16s}
+    .signout-btn:hover{background:#fdecea;border-color:var(--red);text-decoration:none}
 
     /* ── Main content ── */
     .res-main{flex:1;padding:1.75rem 2rem;overflow-y:auto;min-width:0}
@@ -260,7 +263,29 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
     <!-- Brand -->
     <div class="sidebar-brand">
       <div class="sidebar-brand-inner">
-        <div class="sidebar-logo">🗑️</div>
+        <svg viewBox="0 0 72 72" fill="none" width="36" height="36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+          <defs>
+            <linearGradient id="resRingG" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5dd96b"/>
+              <stop offset="50%"  stop-color="#22a94a"/>
+              <stop offset="100%" stop-color="#0d6e30"/>
+            </linearGradient>
+            <linearGradient id="resLeafG" x1="36" y1="20" x2="36" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#7de87a"/>
+              <stop offset="100%" stop-color="#1a8a38"/>
+            </linearGradient>
+          </defs>
+          <path d="M36 8 A28 28 0 0 1 64 36" stroke="url(#resRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <polygon points="64,28 68,38 58,36" fill="#22a94a"/>
+          <path d="M36 64 A28 28 0 0 1 8 36"  stroke="url(#resRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <polygon points="8,44 4,34 14,36"   fill="#22a94a"/>
+          <path d="M64 36 A28 28 0 0 1 36 64" stroke="url(#resRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M8 36 A28 28 0 0 1 36 8"   stroke="url(#resRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M36 58 Q36 44 36 36" stroke="#1a8a38" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M36 44 Q26 38 24 28 Q32 26 36 36 Z" fill="url(#resLeafG)"/>
+          <path d="M36 44 Q46 38 48 28 Q40 26 36 36 Z" fill="url(#resLeafG)"/>
+          <path d="M36 36 Q30 28 31 20 Q38 22 36 32 Z" fill="#5dd96b"/>
+        </svg>
         <div>
           <h2>DisBasura</h2>
           <p>Resident Portal</p>
@@ -270,13 +295,26 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
 
     <!-- User info -->
     <div class="sidebar-user">
-      <div style="display:flex;align-items:center">
-        <div class="sidebar-avatar"><?= strtoupper(substr($_SESSION['full_name'],0,1)) ?></div>
+      <a href="/disbasura/resident/profile.php" style="display:flex;align-items:center;gap:.65rem;text-decoration:none;flex:1;min-width:0">
+        <?php
+          // Show profile photo if set
+          $res_profile_photo = null;
+          try {
+            $rpp = $db->prepare("SELECT profile_photo FROM users WHERE id=?");
+            $rpp->execute([$uid]);
+            $res_profile_photo = $rpp->fetchColumn();
+          } catch(Exception $e) {}
+        ?>
+        <?php if ($res_profile_photo): ?>
+          <img src="/disbasura/uploads/<?= e($res_profile_photo) ?>" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.25);flex-shrink:0"/>
+        <?php else: ?>
+          <div class="sidebar-avatar"><?= strtoupper(substr($_SESSION['full_name'],0,1)) ?></div>
+        <?php endif; ?>
         <div class="sidebar-user-info">
           <strong><?= e($_SESSION['full_name']) ?></strong>
           <span>📍 <?= e($sitio) ?></span>
         </div>
-      </div>
+      </a>
     </div>
 
     <!-- Nav -->
@@ -299,25 +337,26 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
 
     <!-- Bottom controls -->
     <div class="sidebar-bottom">
-      <div class="sidebar-bottom-controls">
-        <!-- Dark mode toggle — separate from language -->
+      <!-- Row: dark mode + language side by side -->
+      <div class="sb-bottom-row">
         <form method="POST" style="display:contents">
           <input type="hidden" name="toggle_dark" value="1">
-          <button type="submit" class="dark-toggle-btn">
-            <?= $prefs['dark_mode'] ? '☀️ Light Mode' : '🌙 Dark Mode' ?>
+          <button type="submit" class="sb-icon-btn">
+            <?= $prefs['dark_mode'] ? '☀️ Light' : '🌙 Dark' ?>
           </button>
         </form>
+        <form method="POST" style="display:contents">
+          <input type="hidden" name="save_lang" value="1">
+          <select name="language" onchange="this.form.submit()" class="sb-lang-select">
+            <option value="en"  <?= $prefs['language']==='en' ?'selected':'' ?>>🇬🇧 EN</option>
+            <option value="fil" <?= $prefs['language']==='fil'?'selected':'' ?>>🇵🇭 FIL</option>
+          </select>
+        </form>
       </div>
-      <!-- Language selector — separate POST -->
-      <form method="POST" style="display:contents">
-        <input type="hidden" name="save_lang" value="1">
-        <select name="language" onchange="this.form.submit()" class="lang-select">
-          <option value="en"  <?= $prefs['language']==='en'?'selected':'' ?>>🇬🇧 EN</option>
-          <option value="fil" <?= $prefs['language']==='fil'?'selected':'' ?>>🇵🇭 FIL</option>
-        </select>
-      </form>
-      <a href="/disbasura/logout.php" class="signout-btn" style="margin-top:.5rem;display:flex">
-        <span>→</span> <?= $lang['sign_out'] ?>
+      <!-- Sign out -->
+      <a href="/disbasura/logout.php" class="signout-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <?= $lang['sign_out'] ?>
       </a>
     </div>
   </aside>
@@ -352,62 +391,80 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
         <span style="font-size:.75rem;color:#7aab8a">Your sitio is highlighted</span>
       </div>
       <?php if($all_weekly):
-        // Group rows by day
         $grouped = [];
         foreach ($all_weekly as $w) {
             $grouped[$w['day_name']][] = $w;
         }
       ?>
-      <div style="padding:.85rem 1rem .5rem">
+      <div style="padding:.6rem .85rem .85rem">
       <?php foreach ($day_order as $day_name):
         if (!isset($grouped[$day_name])) continue;
-        $rows     = $grouped[$day_name];
-        $is_today = $day_name === $now_day;
-        $dt       = $week_dates[$day_name] ?? null;
-        $day_num  = $dt ? $dt->format('j') : '';
-        $month_sh = $dt ? $dt->format('M') : '';
-        $full_date= $dt ? $dt->format('M j, Y') : '';
-        // count own sitio rows
-        $my_rows  = array_filter($rows, fn($r) => $r['sitio'] === $sitio);
+        $rows      = $grouped[$day_name];
+        $is_today  = $day_name === $now_day;
+        $dt        = $week_dates[$day_name] ?? null;
+        $day_num   = $dt ? $dt->format('j') : '';
+        $month_sh  = $dt ? $dt->format('M') : '';
+        $full_date = $dt ? $dt->format('M j, Y') : '';
+        $my_rows   = array_filter($rows, fn($r) => $r['sitio'] === $sitio);
         $row_count = count($rows);
+        $has_mine  = count($my_rows) > 0;
+        // Today and days with your sitio start open, others start closed
+        $starts_open = $is_today || $has_mine;
+        $card_id = 'daycard_' . strtolower($day_name);
       ?>
-      <div class="day-group">
-        <!-- Day header -->
-        <div class="day-group-header <?= $is_today ? 'is-today' : '' ?>">
-          <div class="day-badge <?= $is_today ? 'today-badge' : '' ?>">
-            <span class="day-num"><?= $day_num ?></span>
-            <span class="day-mon"><?= $month_sh ?></span>
+      <div style="border:1.5px solid <?= $is_today ? '#b6d9c3' : '#e4ede8' ?>;border-radius:12px;overflow:hidden;margin-bottom:.6rem;<?= $is_today ? 'box-shadow:0 0 0 3px rgba(30,107,60,.07)' : '' ?>">
+        <!-- Clickable header -->
+        <button onclick="toggleDay('<?= $card_id ?>')"
+          style="width:100%;display:flex;align-items:center;gap:.85rem;padding:.72rem 1rem;background:<?= $is_today ? 'linear-gradient(90deg,#e8f5ee,#f2faf6)' : '#f8fbf9' ?>;border:none;cursor:pointer;text-align:left;transition:background .15s"
+          onmouseover="this.style.background='<?= $is_today ? 'linear-gradient(90deg,#dff0e8,#ecf7f0)' : '#f0f7f3' ?>'"
+          onmouseout="this.style.background='<?= $is_today ? 'linear-gradient(90deg,#e8f5ee,#f2faf6)' : '#f8fbf9' ?>'">
+          <!-- Date badge -->
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;height:44px;border-radius:9px;background:<?= $is_today ? '#1e6b3c' : '#fff' ?>;border:1.5px solid <?= $is_today ? '#1e6b3c' : '#d4e6db' ?>;flex-shrink:0">
+            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:800;color:<?= $is_today ? '#fff' : '#1a3a2a' ?>;line-height:1"><?= $day_num ?></span>
+            <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;color:<?= $is_today ? 'rgba(255,255,255,.75)' : '#7aab8a' ?>;letter-spacing:.04em;margin-top:.1rem"><?= $month_sh ?></span>
           </div>
-          <div class="day-header-info">
-            <h4><?= $day_name ?><?php if($is_today): ?> <span style="display:inline-block;font-size:.65rem;background:#1e6b3c;color:#fff;border-radius:20px;padding:.1rem .5rem;vertical-align:middle;font-weight:700;margin-left:.3rem">TODAY</span><?php endif; ?></h4>
-            <p><?= $full_date ?> · <?= $row_count ?> sitio<?= $row_count>1?'s':'' ?><?php if($my_rows): ?> · <strong style="color:#1e6b3c">Your sitio is listed</strong><?php endif; ?></p>
+          <!-- Day info -->
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;color:#1a3a2a"><?= $day_name ?></span>
+              <?php if($is_today): ?><span style="font-size:.62rem;background:#1e6b3c;color:#fff;border-radius:20px;padding:.1rem .5rem;font-weight:700">TODAY</span><?php endif; ?>
+              <?php if($has_mine): ?><span style="font-size:.62rem;background:#e8f5ee;color:#1e6b3c;border:1px solid #b6d9c3;border-radius:20px;padding:.1rem .5rem;font-weight:700">📍 Your sitio</span><?php endif; ?>
+            </div>
+            <div style="font-size:.74rem;color:#7aab8a;margin-top:.1rem"><?= $row_count ?> sitio<?= $row_count>1?'s':'' ?> · <?= $full_date ?></div>
           </div>
-        </div>
-        <!-- Sitio rows -->
-        <?php foreach ($rows as $w):
-          $is_own = $w['sitio'] === $sitio;
-          $sc = $w['status'];
-          $bc = $sc==='received'?'completed':($sc==='missed'?'rejected':'pending');
-        ?>
-        <div class="sched-entry <?= $is_own ? 'mine' : '' ?>">
-          <div class="sched-entry-left">
-            <span class="sched-time-chip">🕖 <?= e(substr($w['collection_time'],0,5)) ?></span>
-            <div>
-              <span class="sched-sitio">
-                <?= e($w['sitio']) ?>
-                <?php if($is_own): ?><span class="own-pill" style="margin-left:.35rem">Mine</span><?php endif; ?>
-              </span>
-              <?php if($w['collector_name']): ?>
-              <div style="font-size:.72rem;color:#7aab8a;margin-top:.1rem">🚛 <?= e($w['collector_name']) ?></div>
-              <?php endif; ?>
+          <!-- Chevron -->
+          <svg id="<?= $card_id ?>_chevron" width="16" height="16" fill="none" stroke="#7aab8a" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;transition:transform .22s;transform:<?= $starts_open ? 'rotate(180deg)' : 'rotate(0deg)' ?>">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <!-- Collapsible rows -->
+        <div id="<?= $card_id ?>" style="display:<?= $starts_open ? 'block' : 'none' ?>">
+          <?php foreach ($rows as $w):
+            $is_own = $w['sitio'] === $sitio;
+            $sc = $w['status'];
+            $bc = $sc==='received'?'completed':($sc==='missed'?'rejected':'pending');
+          ?>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;border-top:1px solid #f0f5f2;gap:.5rem;flex-wrap:wrap;<?= $is_own ? 'background:#f2faf5;' : '' ?>">
+            <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:0">
+              <span style="display:inline-flex;align-items:center;padding:.18rem .5rem;background:#e8f5ee;color:#1e6b3c;border-radius:6px;font-size:.7rem;font-weight:700;white-space:nowrap;flex-shrink:0">🕖 <?= e(substr($w['collection_time'],0,5)) ?></span>
+              <div style="min-width:0">
+                <span style="font-size:.83rem;font-weight:600;color:#1a3a2a">
+                  <?= e($w['sitio']) ?>
+                  <?php if($is_own): ?><span style="font-size:.62rem;background:#e8f5ee;color:#1e6b3c;border:1px solid #b6d9c3;border-radius:20px;padding:.1rem .4rem;margin-left:.3rem;font-weight:700">Mine</span><?php endif; ?>
+                </span>
+                <?php if($w['collector_name']): ?>
+                <div style="font-size:.7rem;color:#7aab8a">🚛 <?= e($w['collector_name']) ?></div>
+                <?php endif; ?>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">
+              <span style="font-size:.72rem;color:#aac4b2"><?= e($w['waste_type']) ?></span>
+              <span class="badge <?= $bc ?>"><?= e($sc) ?></span>
             </div>
           </div>
-          <div class="sched-entry-right">
-            <span style="font-size:.74rem;color:#7aab8a"><?= e($w['waste_type']) ?></span>
-            <span class="badge <?= $bc ?>"><?= e($sc) ?></span>
-          </div>
+          <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
       </div>
       <?php endforeach; ?>
       </div>
@@ -415,6 +472,16 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
       <div style="padding:2rem;text-align:center;color:#7aab8a;font-size:.85rem">No weekly schedule set yet.</div>
       <?php endif; ?>
     </div>
+
+    <script>
+    function toggleDay(id) {
+      var el  = document.getElementById(id);
+      var chv = document.getElementById(id + '_chevron');
+      var open = el.style.display === 'none';
+      el.style.display  = open ? 'block' : 'none';
+      chv.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+    </script>
 
     <!-- ── One-time Schedules for this sitio (admin-assigned) ── -->
     <?php if($schedules): ?>

@@ -53,6 +53,17 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
     $initial   = strtoupper(substr($full_name, 0, 1));
     $ud        = $unread > 0 ? 'flex' : 'none';
 
+    // Fetch admin profile photo
+    $admin_photo = '';
+    try {
+        $ap = get_db()->prepare("SELECT profile_photo FROM users WHERE id=?");
+        $ap->execute([$_SESSION['admin_id'] ?? 0]);
+        $admin_photo = (string)($ap->fetchColumn() ?: '');
+    } catch(Exception $e) {}
+    $avatar_html = $admin_photo
+        ? '<img src="/disbasura/uploads/'.e($admin_photo).'" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.25);flex-shrink:0"/>'
+        : '<div class="avatar" style="flex-shrink:0">'.$initial.'</div>';
+
     // Dark mode check
     $prefs    = function_exists('get_preferences') ? get_preferences($_SESSION['admin_id'] ?? 0) : ['dark_mode'=>0];
     $dark     = $prefs['dark_mode'] ? 'data-dark="1"' : '';
@@ -93,22 +104,28 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
 <div class="app active" id="appRoot">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <svg viewBox="0 0 260 220" fill="none" width="34" height="30">
-        <path d="M108 30 Q130 18 152 30" stroke="#3cb371" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <polygon points="152,24 162,30 152,36" fill="#3cb371"/>
-        <path d="M200 78 Q212 110 200 142" stroke="#3cb371" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <polygon points="194,142 200,154 206,142" fill="#3cb371"/>
-        <path d="M152 188 Q130 200 108 188" stroke="#3cb371" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <polygon points="108,194 98,188 108,182" fill="#3cb371"/>
-        <path d="M60 142 Q48 110 60 78" stroke="#3cb371" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <polygon points="66,78 60,66 54,78" fill="#3cb371"/>
-        <rect x="120" y="62" width="20" height="10" rx="4" fill="none" stroke="#3cb371" stroke-width="3"/>
-        <rect x="98"  y="72" width="64" height="10" rx="4" fill="none" stroke="#3cb371" stroke-width="3"/>
-        <rect x="104" y="84" width="52" height="52" rx="4" fill="none" stroke="#3cb371" stroke-width="3"/>
-        <line x1="116" y1="92" x2="116" y2="128" stroke="#3cb371" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="126" y1="92" x2="126" y2="128" stroke="#3cb371" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="136" y1="92" x2="136" y2="128" stroke="#3cb371" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="146" y1="92" x2="146" y2="128" stroke="#3cb371" stroke-width="2.5" stroke-linecap="round"/>
+      <svg viewBox="0 0 72 72" fill="none" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sbRingG" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#5dd96b"/>
+            <stop offset="50%"  stop-color="#22a94a"/>
+            <stop offset="100%" stop-color="#0d6e30"/>
+          </linearGradient>
+          <linearGradient id="sbLeafG" x1="36" y1="20" x2="36" y2="60" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#7de87a"/>
+            <stop offset="100%" stop-color="#1a8a38"/>
+          </linearGradient>
+        </defs>
+        <path d="M36 8 A28 28 0 0 1 64 36" stroke="url(#sbRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <polygon points="64,28 68,38 58,36" fill="#22a94a"/>
+        <path d="M36 64 A28 28 0 0 1 8 36"  stroke="url(#sbRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <polygon points="8,44 4,34 14,36"   fill="#22a94a"/>
+        <path d="M64 36 A28 28 0 0 1 36 64" stroke="url(#sbRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M8 36 A28 28 0 0 1 36 8"   stroke="url(#sbRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M36 58 Q36 44 36 36" stroke="#1a8a38" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M36 44 Q26 38 24 28 Q32 26 36 36 Z" fill="url(#sbLeafG)"/>
+        <path d="M36 44 Q46 38 48 28 Q40 26 36 36 Z" fill="url(#sbLeafG)"/>
+        <path d="M36 36 Q30 28 31 20 Q38 22 36 32 Z" fill="#5dd96b"/>
       </svg>
       <div class="sidebar-brand-text"><h2>DisBasura</h2><span>Admin Panel</span></div>
     </div>
@@ -127,14 +144,22 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
     echo '    </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
-        <div class="avatar">'.$initial.'</div>
-        <div class="sidebar-user-info"><strong>'.$full_name.'</strong><span>Administrator</span></div>
+        <a href="/disbasura/admin/profile.php" style="display:flex;align-items:center;gap:.75rem;text-decoration:none;flex:1;min-width:0">
+          '.$avatar_html.'
+          <div class="sidebar-user-info"><strong>'.$full_name.'</strong><span>Administrator</span></div>
+        </a>
       </div>
-      <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">'.$dark_icon.' '.$dark_label.'</button>
-      <a href="/disbasura/logout.php" class="signout-btn" style="margin-top:.4rem">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <span class="nav-label">Sign Out</span>
-      </a>
+      <div style="display:flex;align-items:center;gap:.4rem;margin-top:.6rem">
+        <button onclick="toggleDark()" id="darkBtn"
+          style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.42rem .55rem;border:1.5px solid var(--border);border-radius:8px;background:transparent;cursor:pointer;font-size:.74rem;font-weight:600;color:var(--text-mid);font-family:inherit;transition:all .18s;white-space:nowrap">
+          '.$dark_icon.' <span class="nav-label">'.($prefs['dark_mode'] ? 'Light' : 'Dark').'</span>
+        </button>
+        <a href="/disbasura/logout.php"
+          style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.42rem .55rem;border:1.5px solid rgba(224,82,82,.3);border-radius:8px;background:transparent;font-size:.74rem;font-weight:600;color:var(--red);text-decoration:none;transition:all .18s;white-space:nowrap">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span class="nav-label">Sign Out</span>
+        </a>
+      </div>
     </div>
   </aside>
   <main class="main" id="mainArea">

@@ -25,7 +25,29 @@ $initial   = strtoupper(substr($_SESSION['full_name'],0,1));
 <div class="app active" id="appRoot">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <svg viewBox="0 0 260 220" fill="none" width="34" height="30"><rect x="120" y="62" width="20" height="10" rx="4" fill="none" stroke="#3cb371" stroke-width="3"/><rect x="98" y="72" width="64" height="10" rx="4" fill="none" stroke="#3cb371" stroke-width="3"/><rect x="104" y="84" width="52" height="52" rx="4" fill="none" stroke="#3cb371" stroke-width="3"/></svg>
+      <svg viewBox="0 0 72 72" fill="none" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ldrRingG" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#5dd96b"/>
+            <stop offset="50%"  stop-color="#22a94a"/>
+            <stop offset="100%" stop-color="#0d6e30"/>
+          </linearGradient>
+          <linearGradient id="ldrLeafG" x1="36" y1="20" x2="36" y2="60" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#7de87a"/>
+            <stop offset="100%" stop-color="#1a8a38"/>
+          </linearGradient>
+        </defs>
+        <path d="M36 8 A28 28 0 0 1 64 36" stroke="url(#ldrRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <polygon points="64,28 68,38 58,36" fill="#22a94a"/>
+        <path d="M36 64 A28 28 0 0 1 8 36"  stroke="url(#ldrRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <polygon points="8,44 4,34 14,36"   fill="#22a94a"/>
+        <path d="M64 36 A28 28 0 0 1 36 64" stroke="url(#ldrRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M8 36 A28 28 0 0 1 36 8"   stroke="url(#ldrRingG)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M36 58 Q36 44 36 36" stroke="#1a8a38" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M36 44 Q26 38 24 28 Q32 26 36 36 Z" fill="url(#ldrLeafG)"/>
+        <path d="M36 44 Q46 38 48 28 Q40 26 36 36 Z" fill="url(#ldrLeafG)"/>
+        <path d="M36 36 Q30 28 31 20 Q38 22 36 32 Z" fill="#5dd96b"/>
+      </svg>
       <div class="sidebar-brand-text"><h2>DisBasura</h2><span>Sitio Leader</span></div>
     </div>
     <nav class="sidebar-nav">
@@ -40,13 +62,11 @@ $initial   = strtoupper(substr($_SESSION['full_name'],0,1));
         <div class="sidebar-user-info"><strong><?= $full_name ?></strong><span><?= htmlspecialchars($sitio) ?></span></div>
       </div>
       <a href="/disbasura/logout.php" class="signout-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span class="nav-label">Sign Out</span></a>
-      <button onclick="toggleSidebar()" style="margin-top:.5rem;width:100%;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.4);border-radius:6px;padding:.4rem;cursor:pointer;font-size:.72rem">‹ Collapse</button>
     </div>
   </aside>
   <main class="main">
     <div class="topbar">
-      <button class="sidebar-toggle" onclick="toggleSidebar()"><span class="toggle-bar"></span><span class="toggle-bar"></span><span class="toggle-bar"></span></button>
-      <span style="background:#fff3e0;color:var(--orange);border:1px solid #ffe0b2;border-radius:20px;padding:.25rem .85rem;font-size:.78rem;font-weight:600;margin-left:.5rem">⭐ Sitio Leader — <?= htmlspecialchars($sitio) ?></span>
+      <span style="background:#fff3e0;color:var(--orange);border:1px solid #ffe0b2;border-radius:20px;padding:.25rem .85rem;font-size:.78rem;font-weight:600">⭐ Sitio Leader — <?= htmlspecialchars($sitio) ?></span>
       <a class="notif-btn" href="/disbasura/leader/notifications.php" style="margin-left:auto"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></a>
     </div>
     <div class="page-content active">
@@ -79,9 +99,5 @@ $initial   = strtoupper(substr($_SESSION['full_name'],0,1));
     </footer>
   </main>
 </div>
-<script>
-function toggleSidebar(){ const a=document.getElementById('appRoot'); const c=a.classList.toggle('sidebar-collapsed'); localStorage.setItem('leader_sb',c?'1':'0'); }
-(function(){ if(localStorage.getItem('leader_sb')==='1') document.getElementById('appRoot').classList.add('sidebar-collapsed'); })();
-</script>
 </body>
 </html>

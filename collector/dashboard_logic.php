@@ -15,6 +15,8 @@ $db  = get_db();
 // ── DB migrations (run once, no-op after) ────────────────────
 try { $db->exec("ALTER TABLE collectors MODIFY COLUMN status ENUM('available','sick','unavailable') NOT NULL DEFAULT 'available'"); } catch(Exception $e){}
 try { $db->exec("ALTER TABLE collectors ADD COLUMN IF NOT EXISTS dark_mode TINYINT NOT NULL DEFAULT 0"); } catch(Exception $e){}
+try { $db->exec("ALTER TABLE collectors ADD COLUMN IF NOT EXISTS profile_photo VARCHAR(500) DEFAULT NULL"); } catch(Exception $e){}
+try { $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_photo VARCHAR(500) DEFAULT NULL"); } catch(Exception $e){}
 foreach ([
     "ALTER TABLE requests ADD COLUMN IF NOT EXISTS proof_photo         VARCHAR(500) DEFAULT NULL",
     "ALTER TABLE requests ADD COLUMN IF NOT EXISTS completed_at        DATETIME     DEFAULT NULL",

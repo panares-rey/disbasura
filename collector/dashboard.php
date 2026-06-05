@@ -113,7 +113,18 @@ $isDark = (int)($collector['dark_mode'] ?? 0);
 <!-- ── Hero ── -->
 <div class="col-hero">
   <h1 class="col-hero-name">
-    <?= htmlspecialchars($collector['full_name']) ?> | <?= htmlspecialchars($collector['sitio']) ?>
+    <a href="/disbasura/collector/profile.php" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:.65rem">
+      <?php
+        // Show profile photo in hero if set
+        $col_photo = $collector['profile_photo'] ?? null;
+      ?>
+      <?php if ($col_photo): ?>
+        <img src="/disbasura/uploads/<?= htmlspecialchars($col_photo) ?>" alt="" style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2.5px solid rgba(255,255,255,.35);flex-shrink:0"/>
+      <?php else: ?>
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);font-size:1.2rem;font-weight:800;flex-shrink:0"><?= strtoupper(substr($collector['full_name'],0,1)) ?></span>
+      <?php endif; ?>
+      <?= htmlspecialchars($collector['full_name']) ?> | <?= htmlspecialchars($collector['sitio']) ?>
+    </a>
   </h1>
   <div class="col-hero-badges">
     <span class="badge-portal">
