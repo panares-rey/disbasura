@@ -209,14 +209,17 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
     .ann-item:last-child{border-bottom:none}
 
     /* Responsive */
-    @media(max-width:680px){
-      .res-sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid #e4ede8}
-      .res-layout{flex-direction:column}
-      .sidebar-nav{display:flex;padding:.5rem;gap:.25rem;overflow-x:auto}
-      .sidebar-nav a{white-space:nowrap;margin-bottom:0}
-      .sidebar-bottom{display:flex;gap:.5rem;padding:.5rem .75rem;width:100%}
-      .sidebar-bottom-controls{flex:1}
-      .res-main{padding:1.25rem}
+    /* Ham btn — hidden on desktop, shown on mobile via media query */
+    .res-ham-btn{display:none;flex-direction:column;justify-content:center;gap:5px;position:fixed;top:12px;left:12px;z-index:210;width:40px;height:40px;padding:7px;background:#2d8653;border:none;border-radius:10px;cursor:pointer;box-shadow:0 2px 8px rgba(45,134,83,.4)}
+    .res-ham-btn span{display:block;width:100%;height:2.5px;background:#fff;border-radius:2px}
+    /* Resident overlay */
+    .res-mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:199;cursor:pointer}
+    .res-mob-overlay.show{display:block}
+    @media(max-width:768px){
+      .res-ham-btn{display:flex!important}
+      .res-sidebar{position:fixed!important;left:-260px;top:0;height:100vh!important;z-index:200;transition:left .3s cubic-bezier(.4,0,.2,1);box-shadow:none;overflow-y:auto;width:240px}
+      .res-sidebar.open{left:0!important;box-shadow:6px 0 30px rgba(0,0,0,.4)}
+      .res-main{width:100%!important;padding:1.25rem}
     }
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -580,7 +583,12 @@ $dark = $prefs['dark_mode'] ? 'dark' : '';
     </div>
 
   </main>
-</div>
+</div><!-- /.res-layout -->
+<!-- Mobile overlay + hamburger at root level -->
+<div class="res-mob-overlay" id="resMobOverlay"></div>
+<button class="res-ham-btn" id="resHamBtn" aria-label="Open menu">
+  <span></span><span></span><span></span>
+</button>
 
 <!-- Resident Proof Modal -->
 <div id="resProofModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(5px);z-index:400;align-items:center;justify-content:center;padding:1.5rem">
@@ -758,6 +766,17 @@ document.getElementById('reqProofForm').addEventListener('submit', function(){
   btn.innerHTML = '⏳ Uploading…'; btn.disabled = true;
 });
 document.getElementById('reqProofModal').addEventListener('click', function(e){ if(e.target===this)closeReqProof(); });
+</script>
+<script>
+// ── Resident mobile sidebar ──────────────────────
+var _rSb  = document.querySelector(".res-sidebar");
+var _rHam = document.getElementById("resHamBtn");
+var _rOv  = document.getElementById("resMobOverlay");
+function openResSb()  { if(_rSb)_rSb.classList.add("open");  if(_rOv)_rOv.classList.add("show"); }
+function closeResSb() { if(_rSb)_rSb.classList.remove("open"); if(_rOv)_rOv.classList.remove("show"); }
+if(_rHam) _rHam.onclick = function(){ _rSb&&_rSb.classList.contains("open") ? closeResSb() : openResSb(); };
+if(_rOv)  _rOv.onclick  = closeResSb;
+document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeResSb(); });
 </script>
 </body>
 </html>

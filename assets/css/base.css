@@ -364,7 +364,7 @@ input, select, textarea { font-family: inherit; }
 
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
-  :root { --sidebar-w: 0px; }
+  /* Sidebar handled by hamburger JS — don't collapse width here */
 }
 
 /* ---- Alert Messages ---- */

@@ -35,25 +35,18 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
     $db  = get_db();
     $pageCounts = [];
     try {
-        // Requests: pending count
-        $pageCounts['requests'] = (int)$db->query("SELECT COUNT(*) FROM requests WHERE status='pending'")->fetchColumn();
-        // Disputes: pending count
-        $pageCounts['disputes'] = (int)$db->query("SELECT COUNT(*) FROM disputes WHERE status='pending'")->fetchColumn();
-        // Notifications: unread
+        $pageCounts['requests']      = (int)$db->query("SELECT COUNT(*) FROM requests WHERE status='pending'")->fetchColumn();
+        $pageCounts['disputes']      = (int)$db->query("SELECT COUNT(*) FROM disputes WHERE status='pending'")->fetchColumn();
         $pageCounts['notifications'] = $unread;
-        // Collectors: sick or unavailable
-        $pageCounts['collectors'] = (int)$db->query("SELECT COUNT(*) FROM collectors WHERE status IN ('sick','unavailable')")->fetchColumn();
-        // Schedules: unverified (missed/needs review)
-        $pageCounts['schedules'] = (int)$db->query("SELECT COUNT(*) FROM schedules WHERE status='unverified'")->fetchColumn();
-        // Residents: registered today
-        $pageCounts['residents'] = (int)$db->query("SELECT COUNT(*) FROM users WHERE role='resident' AND DATE(created_at)=CURDATE()")->fetchColumn();
+        $pageCounts['collectors']    = (int)$db->query("SELECT COUNT(*) FROM collectors WHERE status IN ('sick','unavailable')")->fetchColumn();
+        $pageCounts['schedules']     = (int)$db->query("SELECT COUNT(*) FROM schedules WHERE status='unverified'")->fetchColumn();
+        $pageCounts['residents']     = (int)$db->query("SELECT COUNT(*) FROM users WHERE role='resident' AND DATE(created_at)=CURDATE()")->fetchColumn();
     } catch (Exception $e) {}
 
     $full_name = e($_SESSION['admin_name'] ?? 'Admin');
     $initial   = strtoupper(substr($full_name, 0, 1));
     $ud        = $unread > 0 ? 'flex' : 'none';
 
-    // Fetch admin profile photo
     $admin_photo = '';
     try {
         $ap = get_db()->prepare("SELECT profile_photo FROM users WHERE id=?");
@@ -64,9 +57,8 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
         ? '<img src="/disbasura/uploads/'.e($admin_photo).'" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.25);flex-shrink:0"/>'
         : '<div class="avatar" style="flex-shrink:0">'.$initial.'</div>';
 
-    // Dark mode check
-    $prefs    = function_exists('get_preferences') ? get_preferences($_SESSION['admin_id'] ?? 0) : ['dark_mode'=>0];
-    $dark     = $prefs['dark_mode'] ? 'data-dark="1"' : '';
+    $prefs = function_exists('get_preferences') ? get_preferences($_SESSION['admin_id'] ?? 0) : ['dark_mode'=>0];
+    $dark  = $prefs['dark_mode'] ? 'data-dark="1"' : '';
 
     echo '<!DOCTYPE html>
 <html lang="en" '.($prefs['dark_mode']?'class="dark"':'').'>
@@ -77,14 +69,25 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
   <link rel="stylesheet" href="/disbasura/assets/css/base.css"/>
   <link rel="stylesheet" href="/disbasura/assets/css/dashboard.css"/>
   <style>
-    .mob-toggle{display:none;flex-direction:column;gap:5px;width:36px;height:36px;padding:6px;background:transparent;border:1.5px solid var(--border);border-radius:8px;cursor:pointer}
-    .mob-toggle span{display:block;width:100%;height:2px;background:var(--text-mid);border-radius:2px;transition:.18s}
-    .mob-toggle:hover{border-color:var(--green-main)}
-    .mob-toggle:hover span{background:var(--green-main)}
-    @media(max-width:768px){.mob-toggle{display:flex}.sidebar{position:fixed!important;left:-260px;top:0;height:100vh;z-index:200;transition:left .28s}.sidebar.open{left:0;box-shadow:0 0 0 9999px rgba(0,0,0,.4)}.main{width:100%}}
+    /* ── Hamburger — position:fixed top-left, same as resident panel ── */
+    .mob-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;position:fixed;top:12px;left:12px;z-index:1000;width:40px;height:40px;padding:7px;background:#2d8653;border:none;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(45,134,83,.45)}
+    .mob-toggle span{display:block;width:100%;height:2.5px;background:#fff;border-radius:2px;transition:all .25s ease}
+    /* ── Overlay ── */
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:998;cursor:pointer}
+    .mob-overlay.show{display:block!important}
+    /* ── Mobile breakpoint ── */
+    @media(max-width:768px){
+      .mob-toggle{display:flex!important}
+      .topbar{padding:.65rem 1rem .65rem 62px!important;gap:.65rem}
+      .sidebar{position:fixed!important;left:-270px;top:0;height:100vh;z-index:999;transition:left .3s cubic-bezier(.4,0,.2,1);box-shadow:none;overflow-y:auto}
+      .sidebar.open{left:0!important;box-shadow:6px 0 30px rgba(0,0,0,.4)}
+      .main{width:100%!important;margin-left:0!important}
+      .page-content{padding:1rem!important}
+      .stats-grid{grid-template-columns:1fr 1fr!important}
+      .two-col,.collectors-grid,.charts-grid,.reports-stats{grid-template-columns:1fr!important}
+    }
     .nav-badge{background:var(--red);color:#fff;border-radius:20px;padding:.1rem .45rem;font-size:.65rem;font-weight:800;margin-left:auto;min-width:18px;text-align:center}
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
-    /* Dark Mode */
     html.dark{--bg-page:#0f1a14;--bg-card:#1a2e22;--text-dark:#e8f5ee;--text-mid:#8baa96;--text-light:#5a7a65;--border:#2d4a36;--border-light:#243d2c;--shadow-sm:0 2px 8px rgba(0,0,0,.4)}
     html.dark .sidebar{background:linear-gradient(180deg,#0a1f13 0%,#0f2d1e 100%)}
     html.dark .main{background:var(--bg-page)}
@@ -95,7 +98,6 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
     html.dark tr{border-color:var(--border) !important}
     html.dark .sched-card{background:var(--bg-card) !important;border-color:var(--border) !important}
     html.dark .modal,html.dark [style*="background:#fff"]{background:var(--bg-card) !important;color:var(--text-dark) !important}
-    /* Dark mode toggle button */
     .dark-toggle{display:flex;align-items:center;gap:.5rem;padding:.45rem .85rem;border-radius:8px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:.78rem;font-weight:600;color:var(--text-mid);font-family:inherit;transition:all .18s;margin-top:.5rem;width:100%}
     .dark-toggle:hover{border-color:var(--green-main);color:var(--green-main)}
   </style>
@@ -164,7 +166,7 @@ function render_admin_header(string $active = '', int $unread = 0, string $title
   </aside>
   <main class="main" id="mainArea">
     <div class="topbar">
-      <button class="mob-toggle" id="mobToggle" onclick="document.getElementById(\'sidebar\').classList.toggle(\'open\')">
+      <button class="mob-toggle" id="mobToggle" onclick="toggleSidebar()">
         <span></span><span></span><span></span>
       </button>
       <div style="margin-left:auto;position:relative;display:inline-flex">
@@ -197,13 +199,42 @@ function render_admin_footer(): void {
       </div>
     </footer>
   </main>
+  <!-- Mobile overlay — INSIDE appRoot so z-index works correctly -->
+  <div class="mob-overlay" id="mobOverlay" onclick="closeSidebar()"></div>
 </div>
 <script>
-// Mobile sidebar
-document.addEventListener("click",function(e){
-  const sb=document.getElementById("sidebar"),tg=document.getElementById("mobToggle");
-  if(sb&&!sb.contains(e.target)&&tg&&!tg.contains(e.target))sb.classList.remove("open");
-});
+// ── Mobile sidebar ──
+(function() {
+  var _sb = document.getElementById("sidebar");
+  var _ov = document.getElementById("mobOverlay");
+
+  function initMobileMenu() {
+    if (window.innerWidth <= 768) {
+      if (_sb) { _sb.classList.remove("open"); _sb.style.left = "-270px"; }
+      if (_ov) { _ov.classList.remove("active"); _ov.style.display = "none"; }
+    } else {
+      if (_sb) { _sb.classList.add("open"); _sb.style.left = "0"; }
+    }
+  }
+
+  initMobileMenu();
+  window.addEventListener("resize", initMobileMenu);
+
+  window.openSidebar = function() {
+    if (_sb) { _sb.classList.add("open"); _sb.style.left = "0"; }
+    if (_ov) { _ov.classList.add("active"); _ov.style.display = "block"; }
+  };
+  window.closeSidebar = function() {
+    if (_sb) { _sb.classList.remove("open"); _sb.style.left = "-270px"; }
+    if (_ov) { _ov.classList.remove("active"); _ov.style.display = "none"; }
+  };
+  window.toggleSidebar = function() {
+    if (_sb && _sb.classList.contains("open")) { closeSidebar(); } else { openSidebar(); }
+  };
+
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeSidebar(); });
+})();
+
 // Dark mode
 function toggleDark(){
   fetch("/disbasura/api/preferences.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({toggle_dark:1})})

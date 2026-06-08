@@ -434,19 +434,20 @@
 @media (max-width: 600px) {
   .stats-grid, .reports-stats { grid-template-columns: 1fr 1fr; }
   .page-content { padding: 1.25rem; }
-  .sidebar { display: none; }
 }
 
 /* =============================================
    SIDEBAR COLLAPSE
    ============================================= */
 
+.sidebar-collapsed .sidebar {
   display: none !important;
 }
 
 
 /* Tooltip on hover when collapsed */
 .nav-item { position: relative; }
+.nav-item::after {
   content: attr(data-tip);
   position: absolute; left: 100%; top: 50%; transform: translateY(-50%);
   background: #1a4a2e; color: #fff; padding: .35rem .8rem;
@@ -799,4 +800,140 @@
   display: flex;
   align-items: center;
   gap: .4rem;
+}
+
+/* =============================================
+   MOBILE HAMBURGER MENU
+   ============================================= */
+
+/* Overlay — covers page when sidebar is open */
+.mob-overlay {
+  display: none !important;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.52);
+  z-index: 998;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+}
+.mob-overlay.active { display: block !important; }
+
+/* Hamburger button — hidden on desktop */
+.mob-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 7px;
+  background: var(--green-main);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(45,134,83,.35);
+  transition: background .18s;
+}
+.mob-toggle span {
+  display: block;
+  width: 100%;
+  height: 2.5px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all .25s cubic-bezier(.4,0,.2,1);
+}
+.mob-toggle:hover { background: #1a5c38; }
+
+/* Resident hamburger — same style, different class */
+.res-ham-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 7px;
+  background: var(--green-main, #2d8653);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(45,134,83,.35);
+  transition: background .18s;
+}
+.res-ham-btn span {
+  display: block;
+  width: 100%;
+  height: 2.5px;
+  background: #fff;
+  border-radius: 2px;
+}
+.res-ham-btn:hover { background: #1a5c38; }
+
+/* ── Slide-in animations when open ── */
+/* Admin sidebar X animation */
+.sidebar.open ~ .mob-overlay,
+.res-sidebar.open ~ .mob-overlay { display: block; }
+
+@media (max-width: 768px) {
+
+  /* Show hamburger buttons */
+  .mob-toggle  { display: flex !important; }
+  .res-ham-btn { display: flex !important; }
+
+  /* Admin sidebar: slide from left */
+  .sidebar {
+    position: fixed !important;
+    left: -270px;
+    top: 0;
+    height: 100vh !important;
+    width: 270px;
+    z-index: 999;
+    transition: left .3s cubic-bezier(.4,0,.2,1);
+    box-shadow: none;
+    overflow-y: auto;
+  }
+  .sidebar.open {
+    left: 0 !important;
+    box-shadow: 6px 0 32px rgba(0,0,0,.45);
+  }
+
+  /* Resident sidebar: slide from left */
+  .res-sidebar {
+    position: fixed !important;
+    left: -260px;
+    top: 0;
+    height: 100vh !important;
+    z-index: 999;
+    transition: left .3s cubic-bezier(.4,0,.2,1);
+    box-shadow: none;
+    overflow-y: auto;
+    width: 240px;
+  }
+  .res-sidebar.open {
+    left: 0 !important;
+    box-shadow: 6px 0 32px rgba(0,0,0,.45);
+  }
+
+  /* Main areas take full width */
+  .main     { width: 100% !important; }
+  .res-main { width: 100% !important; }
+
+  /* Topbar adjustments */
+  .topbar {
+    padding: .65rem 1rem !important;
+    gap: .65rem;
+  }
+
+  /* Content padding */
+  .page-content { padding: 1rem !important; }
+
+  /* Grid collapse */
+  .stats-grid   { grid-template-columns: 1fr 1fr !important; }
+  .reports-stats { grid-template-columns: 1fr 1fr !important; }
+  .two-col,
+  .collectors-grid,
+  .charts-grid  { grid-template-columns: 1fr !important; }
 }
